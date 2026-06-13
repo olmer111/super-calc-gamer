@@ -3,103 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super-Calc Gamer 👑</title>
+    <title>Super-Calc Gamer 👑 | Hardcore Edition</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Fira+Sans:wght@300;400;600;700&display=swap');
+
         :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --accent: #00f2ff;
-            --accent-2: #ff00ea;
-            --text: #f8fafc;
+            --bg: #0F172A;
+            --card: #1E293B;
+            --primary: #F59E0B;
+            --secondary: #FBBF24;
+            --cta: #8B5CF6;
+            --danger: #EF4444;
+            --text: #F8FAFC;
+            --text-dim: #94A3B8;
+            --glow: rgba(245, 158, 11, 0.3);
+            --cta-glow: rgba(139, 92, 246, 0.4);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Fira Sans', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             overflow: hidden;
+            perspective: 1000px;
         }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            z-index: -1;
+            animation: rotateBg 20s linear infinite;
+        }
+
+        @keyframes rotateBg {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         .container {
             background: var(--card);
-            padding: 2rem;
-            border-radius: 2rem;
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
-            border: 2px solid var(--accent);
-            width: 320px;
+            padding: 2.5rem;
+            border-radius: 3rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px var(--glow);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            width: 340px;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            position: relative;
+            transform-style: preserve-3d;
         }
-        h1 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent); text-shadow: 0 0 10px var(--accent); }
+
+        .container:hover {
+            transform: rotateX(2deg) rotateY(2deg);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 30px var(--glow);
+            border-color: var(--primary);
+        }
+
+        h1 { 
+            font-family: 'Fira Code', monospace;
+            font-size: 1.6rem; 
+            margin-bottom: 1.5rem; 
+            color: var(--primary); 
+            text-shadow: 0 0 15px var(--primary); 
+            letter-spacing: -1px;
+        }
+
         #display {
             width: 100%;
-            height: 60px;
-            background: #000;
-            border: 2px solid var(--accent-2);
-            border-radius: 10px;
-            color: var(--accent);
-            font-size: 1.5rem;
+            height: 70px;
+            background: #020617;
+            border: 2px solid var(--cta);
+            border-radius: 1rem;
+            color: var(--primary);
+            font-family: 'Fira Code', monospace;
+            font-size: 1.8rem;
             text-align: right;
-            padding: 10px;
-            margin-bottom: 1rem;
+            padding: 12px 20px;
+            margin-bottom: 1.5rem;
             box-sizing: border-box;
+            box-shadow: inset 0 0 15px var(--cta-glow);
+            transition: var(--transition);
         }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 12px;
         }
+
         button {
-            padding: 15px;
+            padding: 18px 0;
             border: none;
-            border-radius: 10px;
+            border-radius: 1rem;
             background: #334155;
-            color: white;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        button:hover { background: #475569; transform: scale(1.05); }
-        .op { background: var(--accent-2); color: white; }
-        .eq { background: var(--accent); color: #000; grid-column: span 2; font-weight: bold; }
-        #game-area {
-            display: none;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .game-box {
-            background: #000;
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px solid var(--accent);
-        }
-        #game-question { font-size: 2rem; margin-bottom: 10px; }
-        #game-input {
-            width: 80%;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            text-align: center;
+            color: var(--text);
+            font-family: 'Fira Code', monospace;
             font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
+
+        button:hover { 
+            background: #475569; 
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .op { background: rgba(139, 92, 246, 0.2); color: var(--cta); border: 1px solid var(--cta); }
+        .op:hover { background: var(--cta); color: white; box-shadow: 0 0 15px var(--cta-glow); }
+        .eq { background: var(--primary); color: #000; grid-column: span 2; font-weight: 700; box-shadow: 0 0 15px var(--glow); }
+
+        #game-view {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .game-box {
+            background: #020617;
+            padding: 25px;
+            border-radius: 2rem;
+            border: 1px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #game-question { 
+            font-family: 'Fira Code', monospace;
+            font-size: 2.2rem; 
+            margin-bottom: 15px; 
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        #game-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 1rem;
+            border: 2px solid var(--cta);
+            background: #0f172a;
+            color: var(--text);
+            text-align: center;
+            font-size: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            box-sizing: border-box;
+            transition: var(--transition);
+        }
+
+        /* BARRA DE TIEMPO INMERSIVA */
+        .timer-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 2rem 2rem 0 0;
+            overflow: hidden;
+        }
+
+        #timer-bar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--cta));
+            transition: width 0.1s linear;
+        }
+
+        .score-board {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+        #score { color: var(--primary); font-family: 'Fira Code', monospace; font-size: 1.4rem; }
+        #difficulty { color: var(--cta); font-family: 'Fira Code', monospace; font-size: 1rem; }
+
         .nav-btn {
-            margin-top: 20px;
+            margin-top: 25px;
             width: 100%;
             background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            font-family: 'Fira Sans', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .nav-btn:hover { background: var(--accent); color: #000; }
+
+        .nav-btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 20px var(--glow); }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fly 2s linear infinite;
+        }
+
+        @keyframes fly {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 <div class="container" id="main-container">
     <div id="calc-view">
         <h1>SUPER CALC 👑</h1>
-        <input type="text" id="display" readonly>
+        <input type="text" id="display" readonly placeholder="0">
         <div class="grid">
             <button onclick="clearDisplay()">C</button>
             <button onclick="append('/')" class="op">÷</button>
@@ -125,61 +254,178 @@
     <div id="game-view" style="display:none;">
         <h1>Súper Reflex ⚡</h1>
         <div class="game-box">
+            <div class="timer-container">
+                <div id="timer-bar"></div>
+            </div>
             <div id="game-question">? + ?</div>
             <input type="number" id="game-input" placeholder="Resultado...">
-            <p>Puntos: <span id="score">0</span></p>
+            <div class="score-board">
+                NIVEL: <span id="difficulty">1</span> | PUNTOS: <span id="score">0</span>
+            </div>
         </div>
-        <p style="font-size: 0.8rem;">Responde rápido o pierdes!</p>
+        <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 15px;">¡La línea se acorta, piensa rápido!</p>
         <button class="nav-btn" onclick="toggleView()">🧮 VOLVER A CALC</button>
     </div>
 </div>
+
 <script>
     let display = document.getElementById('display');
-    function append(val) { display.value += val; }
+    
+    function append(val) { display.value += val; createParticles(event); }
     function clearDisplay() { display.value = ''; }
     function backspace() { display.value = display.value.slice(0, -1); }
     function calculate() {
-        try { display.value = eval(display.value); } 
-        catch { display.value = "Error ❌"; }
+        try { 
+            display.value = eval(display.value); 
+            display.style.borderColor = 'var(--primary)';
+            setTimeout(() => display.style.borderColor = 'var(--cta)', 300);
+        } catch { display.value = "Error ❌"; }
     }
+
     function toggleView() {
         const calc = document.getElementById('calc-view');
         const game = document.getElementById('game-view');
-        if(calc.style.display === 'none') {
-            calc.style.display = 'block';
-            game.style.display = 'none';
-            stopGame();
-        } else {
-            calc.style.display = 'none';
-            game.style.display = 'block';
-            startGame();
-        }
+        const container = document.getElementById('main-container');
+        container.style.transform = 'rotateY(180deg)';
+        setTimeout(() => {
+            if(calc.style.display === 'none') {
+                calc.style.display = 'block';
+                game.style.display = 'none';
+                stopGame();
+            } else {
+                calc.style.display = 'none';
+                game.style.display = 'block';
+                startGame();
+            }
+            container.style.transform = 'rotateY(0deg)';
+        }, 300);
     }
+
     let score = 0;
     let currentAns = 0;
+    let timerInterval;
+    let timeLimit = 10000; // 10 segundos iniciales
+    let startTime;
+
     function startGame() {
         score = 0;
+        timeLimit = 10000;
         document.getElementById('score').innerText = score;
+        document.getElementById('difficulty').innerText = "1";
         nextQuestion();
-        document.getElementById('game-input').focus();
-        document.getElementById('game-input').oninput = function() {
+        const input = document.getElementById('game-input');
+        input.focus();
+        input.value = '';
+        input.oninput = function() {
             if(parseInt(this.value) === currentAns) {
                 score++;
                 document.getElementById('score').innerText = score;
+                
+                // Aumentar dificultad cada 3 puntos
+                let diff = Math.floor(score / 3) + 1;
+                document.getElementById('difficulty').innerText = diff;
+                timeLimit = Math.max(2000, 10000 - (diff * 1000)); // Reduce el tiempo
+                
                 this.value = '';
                 nextQuestion();
+                createParticles(event);
             }
         };
     }
+
     function nextQuestion() {
-        const a = Math.floor(Math.random() * 12) + 1;
-        const b = Math.floor(Math.random() * 12) + 1;
-        currentAns = a + b;
-        document.getElementById('game-question').innerText = `${a} + ${b}`;
+        clearInterval(timerInterval);
+        
+        let diff = Math.floor(score / 3) + 1;
+        let a, b, op;
+
+        // Lógica de complejidad progresiva
+        if (diff === 1) {
+            a = Math.floor(Math.random() * 10) + 1;
+            b = Math.floor(Math.random() * 10) + 1;
+            op = '+';
+        } else if (diff === 2) {
+            a = Math.floor(Math.random() * 20) + 5;
+            b = Math.floor(Math.random() * 20) + 5;
+            op = Math.random() > 0.5 ? '+' : '-';
+        } else if (diff === 3) {
+            a = Math.floor(Math.random() * 12) + 2;
+            b = Math.floor(Math.random() * 12) + 2;
+            op = '*';
+        } else {
+            // Combinaciones locas y números más grandes
+            const operations = ['+', '-', '*'];
+            op = operations[Math.floor(Math.random() * operations.length)];
+            a = Math.floor(Math.random() * 50) + 10;
+            b = Math.floor(Math.random() * 50) + 10;
+        }
+
+        if (op === '-') {
+            // Evitar negativos al inicio para no frustrar, pero permitirlos en niveles altos
+            if (diff < 3 && a < b) [a, b] = [b, a];
+        }
+
+        currentAns = eval(`${a}${op}${b}`);
+        document.getElementById('game-question').innerText = `${a} ${op === '*' ? '×' : op === '/' ? '÷' : op} ${b}`;
+        
+        startTimer();
     }
+
+    function startTimer() {
+        const bar = document.getElementById('timer-bar');
+        startTime = Date.now();
+        
+        timerInterval = setInterval(() => {
+            let elapsed = Date.now() - startTime;
+            let percentage = 100 - (elapsed / timeLimit * 100);
+            
+            if (percentage <= 0) {
+                bar.style.width = '0%';
+                gameOver();
+            } else {
+                bar.style.width = percentage + '%';
+                // Cambiar color a rojo cuando quede poco tiempo
+                bar.style.background = percentage < 30 ? 'var(--danger)' : 'linear-gradient(90deg, var(--primary), var(--cta))';
+            }
+        }, 50);
+    }
+
+    function gameOver() {
+        clearInterval(timerInterval);
+        alert(`¡TIEMPO AGOTADO! 💀\nPuntaje Final: ${score}\nNivel Alcanzado: ${Math.floor(score / 3) + 1}`);
+        startGame();
+    }
+
     function stopGame() {
+        clearInterval(timerInterval);
         document.getElementById('game-input').value = '';
     }
+
+    function createParticles(e) {
+        if (!e) return;
+        for (let i = 0; i < 8; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = e.clientX + 'px';
+            p.style.top = e.clientY + 'px';
+            p.style.setProperty('--tx', (Math.random() - 0.5) * 100 + 'px');
+            p.style.setProperty('--ty', (Math.random() - 0.5) * 100 + 'px');
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 2000);
+        }
+    }
+
+    setInterval(() => {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * window.innerWidth + 'px';
+        p.style.top = Math.random() * window.innerHeight + 'px';
+        p.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
+        p.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
+        p.style.opacity = '0.3';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 2000);
+    }, 300);
 </script>
 </body>
 </html>
