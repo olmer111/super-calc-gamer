@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super-Calc Gamer 👑 | Legend Edition</title>
+    <title>Super-Calc Gamer 👑 | Brain Evolution Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Fira+Sans:wght@300;400;600;700&display=swap');
 
@@ -51,22 +51,16 @@
 
         .container {
             background: var(--card);
-            padding: 2.5rem;
+            padding: 2rem;
             border-radius: 3rem;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px var(--glow);
             border: 1px solid rgba(245, 158, 11, 0.2);
-            width: 360px;
+            width: 400px;
             text-align: center;
             transition: var(--transition);
             backdrop-filter: blur(10px);
             position: relative;
             transform-style: preserve-3d;
-        }
-
-        .container:hover {
-            transform: rotateX(2deg) rotateY(2deg);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 30px var(--glow);
-            border-color: var(--primary);
         }
 
         h1 { 
@@ -75,9 +69,9 @@
             margin-bottom: 1.5rem; 
             color: var(--primary); 
             text-shadow: 0 0 15px var(--primary); 
-            letter-spacing: -1px;
         }
 
+        /* VISTA CALCULADORA */
         #display {
             width: 100%;
             height: 70px;
@@ -92,7 +86,6 @@
             margin-bottom: 1.5rem;
             box-sizing: border-box;
             box-shadow: inset 0 0 15px var(--cta-glow);
-            transition: var(--transition);
         }
 
         .grid {
@@ -102,84 +95,73 @@
         }
 
         button {
-            padding: 18px 0;
+            padding: 15px 0;
             border: none;
             border-radius: 1rem;
             background: #334155;
             color: var(--text);
             font-family: 'Fira Code', monospace;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
-            position: relative;
-            overflow: hidden;
         }
 
-        button:hover { 
-            background: #475569; 
-            transform: translateY(-3px) scale(1.05);
-        }
-
+        button:hover { background: #475569; transform: translateY(-3px); }
         .op { background: rgba(139, 92, 246, 0.2); color: var(--cta); border: 1px solid var(--cta); }
-        .op:hover { background: var(--cta); color: white; box-shadow: 0 0 15px var(--cta-glow); }
-        .eq { background: var(--primary); color: #000; grid-column: span 2; font-weight: 700; box-shadow: 0 0 15px var(--glow); }
+        .eq { background: var(--primary); color: #000; grid-column: span 2; font-weight: 700; }
 
-        #game-view {
-            display: none;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* VISTA JUEGO */
+        #game-view { display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .game-box {
             background: #020617;
-            padding: 25px;
+            padding: 20px;
             border-radius: 2rem;
             border: 1px solid var(--primary);
             position: relative;
             overflow: hidden;
+            min-height: 280px;
         }
 
         #game-question { 
             font-family: 'Fira Code', monospace;
-            font-size: 2rem; 
-            margin-bottom: 15px; 
+            font-size: 1.5rem; 
+            margin-bottom: 20px; 
             color: var(--primary);
             text-shadow: 0 0 10px var(--primary);
+            line-height: 1.4;
         }
 
-        #game-input {
-            width: 100%;
-            padding: 15px;
-            border-radius: 1rem;
-            border: 2px solid var(--cta);
-            background: #0f172a;
-            color: var(--text);
-            text-align: center;
-            font-size: 1.5rem;
-            font-family: 'Fira Code', monospace;
-            box-sizing: border-box;
-            transition: var(--transition);
+        /* OPCIONES A B C D */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
         }
+        .option-btn {
+            background: #1e293b;
+            border: 1px solid var(--cta);
+            color: var(--text);
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Fira Code', monospace;
+            transition: var(--transition);
+            text-align: left;
+        }
+        .option-btn:hover { background: var(--cta); transform: scale(1.02); }
 
         .timer-container {
-            width: 100%;
-            height: 8px;
+            width: 100%; height: 8px;
             background: rgba(255,255,255,0.1);
-            position: absolute;
-            top: 0;
-            left: 0;
-            border-radius: 2rem 2rem 0 0;
-            overflow: hidden;
+            position: absolute; top: 0; left: 0;
+            border-radius: 2rem 2rem 0 0; overflow: hidden;
         }
-
         #timer-bar {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             background: linear-gradient(90deg, var(--primary), var(--cta));
             transition: width 0.1s linear;
         }
@@ -190,16 +172,9 @@
             justify-content: space-between;
             font-size: 0.9rem;
             color: var(--text-dim);
-            font-weight: 600;
         }
+        #score, #difficulty { color: var(--primary); font-family: 'Fira Code', monospace; }
 
-        #score, #difficulty { 
-            color: var(--primary); 
-            font-family: 'Fira Code', monospace; 
-            font-size: 1.1rem; 
-        }
-
-        /* PANEL DE PREMIOS */
         .rewards-panel {
             margin-top: 20px;
             display: grid;
@@ -208,24 +183,15 @@
         }
         .reward-item {
             background: rgba(255,255,255,0.05);
-            padding: 10px;
+            padding: 8px;
             border-radius: 12px;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             color: var(--text-dim);
             border: 1px solid transparent;
             transition: var(--transition);
         }
-        .reward-item.unlocked {
-            border-color: var(--success);
-            color: var(--text);
-            background: rgba(16, 185, 129, 0.1);
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
-        }
-        .reward-icon {
-            font-size: 1.5rem;
-            display: block;
-            margin-bottom: 5px;
-        }
+        .reward-item.unlocked { border-color: var(--success); color: var(--text); background: rgba(16, 185, 129, 0.1); }
+        .reward-icon { font-size: 1.2rem; display: block; margin-bottom: 2px; }
 
         .nav-btn {
             margin-top: 25px;
@@ -234,30 +200,40 @@
             border: 1px solid var(--primary);
             color: var(--primary);
             font-family: 'Fira Sans', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
             cursor: pointer;
-            padding: 12px;
+            padding: 10px;
             border-radius: 1rem;
         }
+        .nav-btn:hover { background: var(--primary); color: #000; }
 
-        .nav-btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 20px var(--glow); }
+        /* MENÚ CATEGORÍAS */
+        #category-menu {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .cat-btn {
+            background: #334155;
+            padding: 20px;
+            border-radius: 1.5rem;
+            border: 1px solid var(--cta);
+            color: white;
+            cursor: pointer;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+        .cat-btn:hover { background: var(--cta); transform: translateX(10px); }
 
         .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--primary);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: fly 2s linear infinite;
+            position: absolute; width: 4px; height: 4px;
+            background: var(--primary); border-radius: 50%;
+            pointer-events: none; animation: fly 2s linear infinite;
         }
-
-        @keyframes fly {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
-        }
+        @keyframes fly { 0% { transform: translate(0,0) scale(1); opacity: 1; } 100% { transform: translate(var(--tx),var(--ty)) scale(0); opacity: 0; } }
     </style>
 </head>
 <body>
@@ -285,39 +261,33 @@
             <button onclick="append('0')" style="grid-column: span 2;">0</button>
             <button onclick="append('.')">.</button>
         </div>
-        <button class="nav-btn" onclick="toggleView()">🎮 MODO JUEGO</button>
+        <button class="nav-btn" onclick="showCategories()">🎮 MODO JUEGO</button>
     </div>
-    <div id="game-view" style="display:none;">
-        <h1>Súper Reflex ⚡</h1>
+
+    <div id="category-menu">
+        <h1>ELIGE TU RETO ⚡</h1>
+        <button class="cat-btn" onclick="startGame('math')">🧮 MATEMÁTICAS</button>
+        <button class="cat-btn" onclick="startGame('bio')">🧬 BIOLOGÍA</button>
+        <button class="nav-btn" onclick="showCalc()">VOLVER A CALC</button>
+    </div>
+
+    <div id="game-view">
+        <h1 id="game-title">Súper Reflex ⚡</h1>
         <div class="game-box">
-            <div class="timer-container">
-                <div id="timer-bar"></div>
-            </div>
-            <div id="game-question">? + ?</div>
-            <input type="number" id="game-input" placeholder="Resultado...">
+            <div class="timer-container"><div id="timer-bar"></div></div>
+            <div id="game-question">...</div>
+            <div class="options-grid" id="options-grid"></div>
             <div class="score-board">
                 <span>NIVEL: <span id="difficulty">1</span></span>
                 <span>PUNTOS: <span id="score">0</span></span>
             </div>
         </div>
-
         <div class="rewards-panel">
-            <div class="reward-item" id="rew-1">
-                <span class="reward-icon">🥉</span>
-                <span>Novato<br>5 pts</span>
-            </div>
-            <div class="reward-item" id="rew-2">
-                <span class="reward-icon">🥈</span>
-                <span>Savant<br>15 pts</span>
-            </div>
-            <div class="reward-item" id="rew-3">
-                <span class="reward-icon">🥇</span>
-                <span>Leyenda<br>30 pts</span>
-            </div>
+            <div class="reward-item" id="rew-1"><span class="reward-icon">🥉</span><span>Novato<br>5 pts</span></div>
+            <div class="reward-item" id="rew-2"><span class="reward-icon">🥈</span><span>Savant<br>15 pts</span></div>
+            <div class="reward-item" id="rew-3"><span class="reward-icon">🥇</span><span>Leyenda<br>30 pts</span></div>
         </div>
-
-        <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 15px;">¡Desbloquea los rangos con tu cerebro!</p>
-        <button class="nav-btn" onclick="toggleView()">🧮 VOLVER A CALC</button>
+        <button class="nav-btn" onclick="showCategories()">CAMBIAR CATEGORÍA</button>
     </div>
 </div>
 
@@ -327,104 +297,122 @@
     function clearDisplay() { display.value = ''; }
     function backspace() { display.value = display.value.slice(0, -1); }
     function calculate() {
-        try { 
-            display.value = eval(display.value); 
-            display.style.borderColor = 'var(--primary)';
-            setTimeout(() => display.style.borderColor = 'var(--cta)', 300);
-        } catch { display.value = "Error ❌"; }
+        try { display.value = eval(display.value); } catch { display.value = "Error ❌"; }
     }
 
-    function toggleView() {
-        const calc = document.getElementById('calc-view');
-        const game = document.getElementById('game-view');
-        const container = document.getElementById('main-container');
-        container.style.transform = 'rotateY(180deg)';
-        setTimeout(() => {
-            if(calc.style.display === 'none') {
-                calc.style.display = 'block';
-                game.style.display = 'none';
-                stopGame();
-            } else {
-                calc.style.display = 'none';
-                game.style.display = 'block';
-                startGame();
-            }
-            container.style.transform = 'rotateY(0deg)';
-        }, 300);
+    function showCategories() {
+        document.getElementById('calc-view').style.display = 'none';
+        document.getElementById('game-view').style.display = 'none';
+        document.getElementById('category-menu').style.display = 'flex';
+        stopGame();
+    }
+
+    function showCalc() {
+        document.getElementById('category-menu').style.display = 'none';
+        document.getElementById('calc-view').style.display = 'block';
+        stopGame();
     }
 
     let score = 0;
-    let currentAns = 0;
+    let currentAns = "";
     let timerInterval;
     let timeLimit = 10000;
     let startTime;
+    let currentCategory = 'math';
 
-    function startGame() {
+    const bioQuestions = [
+        { q: "¿Cuál es el hueso más largo del cuerpo humano?", a: "Fémur", o: ["Húmero", "Tibia", "Fémur", "Radio"] },
+        { q: "¿Cuántos huesos tiene un adulto humano aproximadamente?", a: "206", o: ["206", "300", "150", "212"] },
+        { q: "¿En qué parte del cuerpo se encuentra la rótula?", a: "Rodilla", o: ["Codo", la: "Tobillo", "Rodilla", "Muñeca"] },
+        { q: "¿Cómo se llama el hueso que protege el cerebro?", a: "Cráneo", o: ["Clavícula", "Esternón", "Cráneo", "Pelvis"] },
+        { q: "¿Cuál es el hueso más pequeño del cuerpo?", a: "Estribo", o: ["Yunque", "Estribo", "Martillo", "Falange"] },
+        { q: "¿Qué hueso es conocido como la 'sabandija' o el hueso del cuello?", a: "Atlas", o: ["Axis", "Atlas", "Seno", "Vértebra C7"] },
+        { q: "¿La columna vertebral se compone de qué tipo de huesos?", a: "Vértebras", o: ["Tarsos", "Carpos", la: "Vértebras", "Costillas"] },
+        { q: "¿Cuántas costillas tiene normalmente un humano?", a: "24", o: ["12", "24", "30", "18"] }
+    ];
+
+    function startGame(cat) {
+        currentCategory = cat;
         score = 0;
-        timeLimit = 10000;
+        document.getElementById('category-menu').style.display = 'none';
+        document.getElementById('game-view').style.display = 'block';
+        document.getElementById('game-title').innerText = cat === 'math' ? 'Súper Matemáticas ⚡' : 'Bio-Mastery 🧬';
         updateUI();
         nextQuestion();
-        const input = document.getElementById('game-input');
-        input.focus();
-        input.value = '';
-        input.oninput = function() {
-            if(parseInt(this.value) === currentAns) {
-                score++;
-                updateUI();
-                this.value = '';
-                nextQuestion();
-                createParticles(event);
-            }
-        };
     }
 
     function updateUI() {
         document.getElementById('score').innerText = score;
         let diff = Math.floor(score / 3) + 1;
         document.getElementById('difficulty').innerText = diff;
-        
-        // Actualizar premios
-        if(score >= 5) document.getElementById('rew-1').classList.add('unlocked'); else document.getElementById('rew-1').classList.remove('unlocked');
-        if(score >= 15) document.getElementById('rew-2').classList.add('unlocked'); else document.getElementById('rew-2').classList.remove('unlocked');
-        if(score >= 30) document.getElementById('rew-3').classList.add('unlocked'); else document.getElementById('rew-3').classList.remove('unlocked');
+        if(score >= 5) document.getElementById('rew-1').classList.add('unlocked');
+        if(score >= 15) document.getElementById('rew-2').classList.add('unlocked');
+        if(score >= 30) document.getElementById('rew-3').classList.add('unlocked');
     }
 
     function nextQuestion() {
         clearInterval(timerInterval);
         let diff = Math.floor(score / 3) + 1;
-        let a, b, op;
+        let qText = "";
+        let options = [];
 
-        if (diff === 1) {
-            a = Math.floor(Math.random() * 10) + 1;
-            b = Math.floor(Math.random() * 10) + 1;
-            op = '+';
-        } else if (diff === 2) {
-            a = Math.floor(Math.random() * 20) + 5;
-            b = Math.floor(Math.random() * 20) + 5;
-            op = Math.random() > 0.5 ? '+' : '-';
-        } else if (diff === 3) {
-            a = Math.floor(Math.random() * 12) + 2;
-            b = Math.floor(Math.random() * 12) + 2;
-            op = '*';
-        } else if (diff === 4) {
-            a = Math.floor(Math.random() * 50) + 10;
-            b = Math.floor(Math.random() * 50) + 10;
-            op = Math.random() > 0.5 ? '*' : '-';
+        if (currentCategory === 'math') {
+            let a, b, op;
+            if (diff === 1) { a = Math.floor(Math.random()*10)+1; b = Math.floor(Math.random()*10)+1; op = '+'; }
+            else if (diff === 2) { a = Math.floor(Math.random()*20)+5; b = Math.floor(Math.random()*20)+5; op = Math.random()>0.5?'+':'-'; }
+            else if (diff === 3) { 
+                // NIVEL MEDIO: Combinaciones básicas
+                const ops = ['+', '-', '*'];
+                op = ops[Math.floor(Math.random()*ops.length)];
+                a = Math.floor(Math.random()*15)+2; b = Math.floor(Math.random()*15)+2;
+            } else {
+                a = Math.floor(Math.random()*500)+100; b = Math.floor(Math.random()*500)+100;
+                op = ['+', '-', '*'][Math.floor(Math.random()*3)];
+            }
+            if (op === '-' && a < b && diff < 5) [a, b] = [b, a];
+            currentAns = eval(`${a}${op}${b}`).toString();
+            qText = `${a} ${op === '*' ? '×' : op} ${b}`;
+            
+            // Generar opciones falsas
+            options = [currentAns];
+            while(options.length < 4) {
+                let fake = (parseInt(currentAns) + (Math.floor(Math.random()*10)-5)).toString();
+                if(!options.includes(fake)) options.push(fake);
+            }
+            options.sort(() => Math.random() - 0.5);
         } else {
-            // NIVELES LEYENDA: Números super grandes y combinaciones
-            const ops = ['+', '-', '*'];
-            op = ops[Math.floor(Math.random() * ops.length)];
-            a = Math.floor(Math.random() * 500) + 100;
-            b = Math.floor(Math.random() * 500) + 100;
+            let qData = bioQuestions[Math.floor(Math.random()*bioQuestions.length)];
+            qText = qData.q;
+            currentAns = qData.a;
+            options = qData.o.slice().sort(() => Math.random() - 0.5);
         }
 
-        if (op === '-' && a < b && diff < 5) [a, b] = [b, a];
+        document.getElementById('game-question').innerText = qText;
+        const grid = document.getElementById('options-grid');
+        grid.innerHTML = '';
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(opt);
+            grid.appendChild(btn);
+        });
 
-        currentAns = eval(`${a}${op}${b}`);
-        document.getElementById('game-question').innerText = `${a} ${op === '*' ? '×' : op} ${b}`;
-        
-        timeLimit = Math.max(1500, 10000 - (diff * 800));
+        timeLimit = Math.max(2000, 10000 - (diff * 800));
         startTimer();
+    }
+
+    function checkAnswer(val) {
+        if(val === currentAns) {
+            score++;
+            updateUI();
+            createParticles(event);
+            nextQuestion();
+        } else {
+            clearInterval(timerInterval);
+            alert(`¡ERROR! ❌\nLa respuesta correcta era: ${currentAns}`);
+            startGame(currentCategory);
+        }
     }
 
     function startTimer() {
@@ -435,7 +423,9 @@
             let percentage = 100 - (elapsed / timeLimit * 100);
             if (percentage <= 0) {
                 bar.style.width = '0%';
-                gameOver();
+                clearInterval(timerInterval);
+                alert(`¡TIEMPO AGOTADO! 💀\nRespuesta correcta: ${currentAns}`);
+                startGame(currentCategory);
             } else {
                 bar.style.width = percentage + '%';
                 bar.style.background = percentage < 30 ? 'var(--danger)' : 'linear-gradient(90deg, var(--primary), var(--cta))';
@@ -443,16 +433,7 @@
         }, 50);
     }
 
-    function gameOver() {
-        clearInterval(timerInterval);
-        alert(`¡GAME OVER! 💀\nPuntaje: ${score}\nNivel: ${Math.floor(score / 3) + 1}`);
-        startGame();
-    }
-
-    function stopGame() {
-        clearInterval(timerInterval);
-        document.getElementById('game-input').value = '';
-    }
+    function stopGame() { clearInterval(timerInterval); }
 
     function createParticles(e) {
         if (!e) return;
