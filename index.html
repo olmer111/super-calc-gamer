@@ -236,9 +236,9 @@
         @keyframes fly { 0% { transform: translate(0,0) scale(1); opacity: 1; } 100% { transform: translate(var(--tx),var(--ty)) scale(0); opacity: 0; } }
     </style>
 </head>
-<body>
+<body onload="initApp()">
 <div class="container" id="main-container">
-    <div id="calc-view" style="display: block !important;">
+    <div id="calc-view">
         <h1>SUPER CALC 👑</h1>
         <input type="text" id="display" readonly placeholder="0">
         <div class="grid">
@@ -292,12 +292,29 @@
 </div>
 
 <script>
-    let display = document.getElementById('display');
-    function append(val) { display.value += val; createParticles(event); }
-    function clearDisplay() { display.value = ''; }
-    function backspace() { display.value = display.value.slice(0, -1); }
+    let display;
+    
+    function initApp() {
+        display = document.getElementById('display');
+        showCalc();
+    }
+
+    function append(val) { 
+        if(!display) return;
+        display.value += val; 
+        createParticles(window.event); 
+    }
+    function clearDisplay() { if(display) display.value = ''; }
+    function backspace() { if(display) display.value = display.value.slice(0, -1); }
     function calculate() {
-        try { display.value = eval(display.value); } catch { display.value = "Error ❌"; }
+        if(!display) return;
+        try { 
+            // Basic sanitation
+            const sanitized = display.value.replace(/[^-()\d/*+.]/g, '');
+            display.value = eval(sanitized); 
+        } catch { 
+            display.value = "Error ❌"; 
+        }
     }
 
     function showCategories() {
@@ -309,6 +326,7 @@
 
     function showCalc() {
         document.getElementById('category-menu').style.display = 'none';
+        document.getElementById('game-view').style.display = 'none';
         document.getElementById('calc-view').style.display = 'block';
         stopGame();
     }
@@ -323,17 +341,20 @@
     const bioQuestions = [
         { q: "¿Cuál es el hueso más largo del cuerpo humano?", a: "Fémur", o: ["Húmero", "Tibia", "Fémur", "Radio"] },
         { q: "¿Cuántos huesos tiene un adulto humano aproximadamente?", a: "206", o: ["206", "300", "150", "212"] },
-        { q: "¿En qué parte del cuerpo se encuentra la rótula?", a: "Rodilla", o: ["Codo", la: "Tobillo", "Rodilla", "Muñeca"] },
+        { q: "¿En qué parte del cuerpo se encuentra la rótula?", a: "Rodilla", o: ["Codo", "Tobillo", "Rodilla", "Muñeca"] },
         { q: "¿Cómo se llama el hueso que protege el cerebro?", a: "Cráneo", o: ["Clavícula", "Esternón", "Cráneo", "Pelvis"] },
         { q: "¿Cuál es el hueso más pequeño del cuerpo?", a: "Estribo", o: ["Yunque", "Estribo", "Martillo", "Falange"] },
-        { q: "¿Qué hueso es conocido como la 'sabandija' o el hueso del cuello?", a: "Atlas", o: ["Axis", "Atlas", "Seno", "Vértebra C7"] },
-        { q: "¿La columna vertebral se compone de qué tipo de huesos?", a: "Vértebras", o: ["Tarsos", "Carpos", la: "Vértebras", "Costillas"] },
+        { q: "¿Qué hueso es conocido como el hueso del cuello?", a: "Atlas", o: ["Axis", "Atlas", "Seno", "Vértebra C7"] },
+        { q: "¿La columna vertebral se compone de qué tipo de huesos?", a: "Vértebras", o: ["Tarsos", "Carpos", "Vértebras", "Costillas"] },
         { q: "¿Cuántas costillas tiene normalmente un humano?", a: "24", o: ["12", "24", "30", "18"] }
     ];
 
     function startGame(cat) {
         currentCategory = cat;
         score = 0;
+        // Reset rewards
+        document.querySelectorAll('.reward-item').forEach(el => el.classList.remove('unlocked'));
+        
         document.getElementById('category-menu').style.display = 'none';
         document.getElementById('game-view').style.display = 'block';
         document.getElementById('game-title').innerText = cat === 'math' ? 'Súper Matemáticas ⚡' : 'Bio-Mastery 🧬';
@@ -361,7 +382,6 @@
             if (diff === 1) { a = Math.floor(Math.random()*10)+1; b = Math.floor(Math.random()*10)+1; op = '+'; }
             else if (diff === 2) { a = Math.floor(Math.random()*20)+5; b = Math.floor(Math.random()*20)+5; op = Math.random()>0.5?'+':'-'; }
             else if (diff === 3) { 
-                // NIVEL MEDIO: Combinaciones básicas
                 const ops = ['+', '-', '*'];
                 op = ops[Math.floor(Math.random()*ops.length)];
                 a = Math.floor(Math.random()*15)+2; b = Math.floor(Math.random()*15)+2;
@@ -373,7 +393,6 @@
             currentAns = eval(`${a}${op}${b}`).toString();
             qText = `${a} ${op === '*' ? '×' : op} ${b}`;
             
-            // Generar opciones falsas
             options = [currentAns];
             while(options.length < 4) {
                 let fake = (parseInt(currentAns) + (Math.floor(Math.random()*10)-5)).toString();
@@ -394,7 +413,7 @@
             const btn = document.createElement('button');
             btn.className = 'option-btn';
             btn.innerText = opt;
-            btn.onclick = () => checkAnswer(opt);
+            btn.onclick = (e) => checkAnswer(opt, e);
             grid.appendChild(btn);
         });
 
@@ -402,11 +421,11 @@
         startTimer();
     }
 
-    function checkAnswer(val) {
+    function checkAnswer(val, e) {
         if(val === currentAns) {
             score++;
             updateUI();
-            createParticles(event);
+            createParticles(e);
             nextQuestion();
         } else {
             clearInterval(timerInterval);
@@ -437,11 +456,15 @@
 
     function createParticles(e) {
         if (!e) return;
+        const x = e.clientX || (e.touches && e.touches[0].clientX);
+        const y = e.clientY || (e.touches && e.touches[0].clientY);
+        if (x === undefined) return;
+
         for (let i = 0; i < 8; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
-            p.style.left = e.clientX + 'px';
-            p.style.top = e.clientY + 'px';
+            p.style.left = x + 'px';
+            p.style.top = y + 'px';
             p.style.setProperty('--tx', (Math.random() - 0.5) * 100 + 'px');
             p.style.setProperty('--ty', (Math.random() - 0.5) * 100 + 'px');
             document.body.appendChild(p);
