@@ -3,486 +3,447 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super-Calc Gamer 👑 | Brain Evolution Edition</title>
+    <title>Super-Calc Pro Max 👑 | Elite Edition</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Fira+Sans:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Inter:wght@300;400;600;800&display=swap');
 
         :root {
-            --bg: #0F172A;
-            --card: #1E293B;
+            --bg: #020617;
+            --glass: rgba(30, 41, 59, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
             --primary: #F59E0B;
-            --secondary: #FBBF24;
-            --cta: #8B5CF6;
-            --danger: #EF4444;
-            --success: #10B981;
+            --accent: #8B5CF6;
             --text: #F8FAFC;
             --text-dim: #94A3B8;
-            --glow: rgba(245, 158, 11, 0.3);
-            --cta-glow: rgba(139, 92, 246, 0.4);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --neon-glow: 0 0 20px rgba(245, 158, 11, 0.4);
         }
 
         body {
-            background-color: var(--bg);
+            background: var(--bg);
             color: var(--text);
-            font-family: 'Fira Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             overflow: hidden;
-            perspective: 1000px;
         }
 
         body::before {
             content: '';
             position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #020617 100%);
             z-index: -1;
-            animation: rotateBg 20s linear infinite;
         }
 
-        @keyframes rotateBg {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .container {
-            background: var(--card);
+        .app-container {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            width: 420px;
             padding: 2rem;
-            border-radius: 3rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px var(--glow);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            width: 400px;
-            text-align: center;
-            transition: var(--transition);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             position: relative;
-            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
         }
 
-        h1 { 
-            font-family: 'Fira Code', monospace;
-            font-size: 1.6rem; 
-            margin-bottom: 1.5rem; 
-            color: var(--primary); 
-            text-shadow: 0 0 15px var(--primary); 
-        }
-
-        /* VISTA CALCULADORA */
-        #display {
-            width: 100%;
-            height: 70px;
-            background: #020617;
-            border: 2px solid var(--cta);
-            border-radius: 1rem;
-            color: var(--primary);
-            font-family: 'Fira Code', monospace;
-            font-size: 1.8rem;
-            text-align: right;
-            padding: 12px 20px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1.5rem;
-            box-sizing: border-box;
-            box-shadow: inset 0 0 15px var(--cta-glow);
         }
 
-        .grid {
+        h1 {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin: 0;
+            text-shadow: var(--neon-glow);
+        }
+
+        #display-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            text-align: right;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        #history {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            min-height: 1.2rem;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #main-display {
+            font-family: 'Fira Code', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mode-nav {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .mode-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            padding: 8px 4px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+            box-shadow: var(--neon-glow);
+        }
+
+        .calc-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 12px;
         }
 
-        button {
-            padding: 15px 0;
-            border: none;
-            border-radius: 1rem;
-            background: #334155;
+        button.key {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--border);
             color: var(--text);
+            padding: 18px 0;
+            border-radius: 16px;
             font-family: 'Fira Code', monospace;
             font-size: 1.1rem;
-            font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
+            transition: background 0.2s;
         }
 
-        button:hover { background: #475569; transform: translateY(-3px); }
-        .op { background: rgba(139, 92, 246, 0.2); color: var(--cta); border: 1px solid var(--cta); }
-        .eq { background: var(--primary); color: #000; grid-column: span 2; font-weight: 700; }
+        button.key:hover { background: rgba(255,255,255,0.15); }
+        button.key.op { color: var(--accent); border-color: var(--accent); }
+        button.key.action { background: var(--primary); color: #000; font-weight: 700; }
+        button.key.wide { grid-column: span 2; }
 
-        /* VISTA JUEGO */
-        #game-view { display: none; animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .game-box {
-            background: #020617;
-            padding: 20px;
-            border-radius: 2rem;
-            border: 1px solid var(--primary);
-            position: relative;
-            overflow: hidden;
-            min-height: 280px;
-        }
-
-        #game-question { 
-            font-family: 'Fira Code', monospace;
-            font-size: 1.5rem; 
-            margin-bottom: 20px; 
-            color: var(--primary);
-            text-shadow: 0 0 10px var(--primary);
-            line-height: 1.4;
-        }
-
-        /* OPCIONES A B C D */
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .option-btn {
-            background: #1e293b;
-            border: 1px solid var(--cta);
-            color: var(--text);
-            padding: 12px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-family: 'Fira Code', monospace;
-            transition: var(--transition);
-            text-align: left;
-        }
-        .option-btn:hover { background: var(--cta); transform: scale(1.02); }
-
-        .timer-container {
-            width: 100%; height: 8px;
-            background: rgba(255,255,255,0.1);
-            position: absolute; top: 0; left: 0;
-            border-radius: 2rem 2rem 0 0; overflow: hidden;
-        }
-        #timer-bar {
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--cta));
-            transition: width 0.1s linear;
-        }
-
-        .score-board {
-            margin-top: 15px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            color: var(--text-dim);
-        }
-        #score, #difficulty { color: var(--primary); font-family: 'Fira Code', monospace; }
-
-        .rewards-panel {
-            margin-top: 20px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        .reward-item {
-            background: rgba(255,255,255,0.05);
-            padding: 8px;
-            border-radius: 12px;
-            font-size: 0.6rem;
-            color: var(--text-dim);
-            border: 1px solid transparent;
-            transition: var(--transition);
-        }
-        .reward-item.unlocked { border-color: var(--success); color: var(--text); background: rgba(16, 185, 129, 0.1); }
-        .reward-icon { font-size: 1.2rem; display: block; margin-bottom: 2px; }
-
-        .nav-btn {
-            margin-top: 25px;
-            width: 100%;
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            font-family: 'Fira Sans', sans-serif;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 1rem;
-        }
-        .nav-btn:hover { background: var(--primary); color: #000; }
-
-        /* MENÚ CATEGORÍAS */
-        #category-menu {
+        /* Modal-like views for Converters/Finance */
+        .special-view {
             display: none;
             flex-direction: column;
             gap: 15px;
-            animation: fadeIn 0.4s ease-out;
+            animation: fadeIn 0.3s ease;
         }
-        .cat-btn {
-            background: #334155;
-            padding: 20px;
-            border-radius: 1.5rem;
-            border: 1px solid var(--cta);
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .input-group label { font-size: 0.8rem; color: var(--text-dim); }
+        .input-group input, .input-group select {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
             color: white;
-            cursor: pointer;
+            padding: 12px;
+            border-radius: 10px;
             font-family: 'Fira Code', monospace;
-            font-size: 1.1rem;
-            transition: var(--transition);
         }
-        .cat-btn:hover { background: var(--cta); transform: translateX(10px); }
 
         .particle {
-            position: absolute; width: 4px; height: 4px;
-            background: var(--primary); border-radius: 50%;
-            pointer-events: none; animation: fly 2s linear infinite;
+            position: absolute;
+            width: 4px; height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
         }
-        @keyframes fly { 0% { transform: translate(0,0) scale(1); opacity: 1; } 100% { transform: translate(var(--tx),var(--ty)) scale(0); opacity: 0; } }
     </style>
 </head>
-<body onload="initApp()">
-<div class="container" id="main-container">
-    <div id="calc-view">
-        <h1>SUPER CALC 👑</h1>
-        <input type="text" id="display" readonly placeholder="0">
-        <div class="grid">
-            <button onclick="clearDisplay()">C</button>
-            <button onclick="append('/')" class="op">÷</button>
-            <button onclick="append('*')" class="op">×</button>
-            <button onclick="backspace()">⌫</button>
-            <button onclick="append('7')">7</button>
-            <button onclick="append('8')">8</button>
-            <button onclick="append('9')">9</button>
-            <button onclick="append('-')" class="op">-</button>
-            <button onclick="append('4')">4</button>
-            <button onclick="append('5')">5</button>
-            <button onclick="append('6')">6</button>
-            <button onclick="append('+')" class="op">+</button>
-            <button onclick="append('1')">1</button>
-            <button onclick="append('2')">2</button>
-            <button onclick="append('3')">3</button>
-            <button onclick="calculate()" class="eq">=</button>
-            <button onclick="append('0')" style="grid-column: span 2;">0</button>
-            <button onclick="append('.')">.</button>
-        </div>
-        <button class="nav-btn" onclick="showCategories()">🎮 MODO JUEGO</button>
+<body>
+
+<div class="app-container" id="app">
+    <div class="header">
+        <h1>SUPER-CALC PRO MAX 👑</h1>
+        <div id="mode-indicator" style="font-size: 0.7rem; color: var(--primary)">BASIC</div>
     </div>
 
-    <div id="category-menu">
-        <h1>ELIGE TU RETO ⚡</h1>
-        <button class="cat-btn" onclick="startGame('math')">🧮 MATEMÁTICAS</button>
-        <button class="cat-btn" onclick="startGame('bio')">🧬 BIOLOGÍA</button>
-        <button class="nav-btn" onclick="showCalc()">VOLVER A CALC</button>
+    <div id="display-container">
+        <div id="history"></div>
+        <div id="main-display">0</div>
     </div>
 
-    <div id="game-view">
-        <h1 id="game-title">Súper Reflex ⚡</h1>
-        <div class="game-box">
-            <div class="timer-container"><div id="timer-bar"></div></div>
-            <div id="game-question">...</div>
-            <div class="options-grid" id="options-grid"></div>
-            <div class="score-board">
-                <span>NIVEL: <span id="difficulty">1</span></span>
-                <span>PUNTOS: <span id="score">0</span></span>
-            </div>
+    <div class="mode-nav">
+        <button class="mode-btn active" onclick="switchMode('basic')">BASIC</button>
+        <button class="mode-btn" onclick="switchMode('sci')">SCI</button>
+        <button class="mode-btn" onclick="switchMode('prog')">PROG</button>
+        <button class="mode-btn" onclick="switchMode('conv')">CONV</button>
+        <button class="mode-btn" onclick="switchMode('fin')">FIN</button>
+    </div>
+
+    <!-- BASIC / SCI / PROG VIEW -->
+    <div id="main-grid" class="calc-grid">
+        <!-- Dynamic keys injected here -->
+    </div>
+
+    <!-- CONVERTER VIEW -->
+    <div id="conv-view" class="special-view">
+        <div class="input-group">
+            <label>Valor</label>
+            <input type="number" id="conv-input" placeholder="0.00">
         </div>
-        <div class="rewards-panel">
-            <div class="reward-item" id="rew-1"><span class="reward-icon">🥉</span><span>Novato<br>5 pts</span></div>
-            <div class="reward-item" id="rew-2"><span class="reward-icon">🥈</span><span>Savant<br>15 pts</span></div>
-            <div class="reward-item" id="rew-3"><span class="reward-icon">🥇</span><span>Leyenda<br>30 pts</span></div>
+        <div class="input-group">
+            <label>De</label>
+            <select id="conv-from">
+                <option value="m">Metros</option>
+                <option value="km">Kilómetros</option>
+                <option value="kg">Kilos</option>
+                <option value="lb">Libras</option>
+                <option value="c">Celsius</option>
+                <option value="f">Fahrenheit</option>
+            </select>
         </div>
-        <button class="nav-btn" onclick="showCategories()">CAMBIAR CATEGORÍA</button>
+        <div class="input-group">
+            <label>A</label>
+            <select id="conv-to">
+                <option value="km">Kilómetros</option>
+                <option value="m">Metros</option>
+                <option value="lb">Libras</option>
+                <option value="kg">Kilos</option>
+                <option value="f">Fahrenheit</option>
+                <option value="c">Celsius</option>
+            </select>
+        </div>
+        <button class="key action" onclick="doConversion()">CONVERTIR</button>
+    </div>
+
+    <!-- FINANCIAL VIEW -->
+    <div id="fin-view" class="special-view">
+        <div class="input-group">
+            <label>Monto Principal</label>
+            <input type="number" id="fin-principal" placeholder="0.00">
+        </div>
+        <div class="input-group">
+            <label>Tasa Interés (%)</label>
+            <input type="number" id="fin-rate" placeholder="0.00">
+        </div>
+        <div class="input-group">
+            <label>Tiempo (Años)</label>
+            <input type="number" id="fin-time" placeholder="0">
+        </div>
+        <button class="key action" onclick="calcFinance()">CALCULAR INTERÉS</button>
     </div>
 </div>
 
 <script>
-    let display;
-    
-    function initApp() {
-        display = document.getElementById('display');
+    const state = {
+        mode: 'basic',
+        expression: '',
+        history: '',
+        lastResult: null
+    };
+
+    const keys = {
+        basic: [
+            {l: 'C', a: 'clear', c: 'action'}, {l: '(', a: '(', c: 'op'}, {l: ')', a: ')', c: 'op'}, {l: '÷', a: '/', c: 'op'},
+            {l: '7', a: '7', c: ''}, {l: '8', a: '8', c: ''}, {l: '9', a: '9', c: ''}, {l: '×', a: '*', c: 'op'},
+            {l: '4', a: '4', c: ''}, {l: '5', a: '5', c: ''}, {l: '6', a: '6', c: ''}, {l: '-', a: '-', c: 'op'},
+            {l: '1', a: '1', c: ''}, {l: '2', a: '2', c: ''}, {l: '3', a: '3', c: ''}, {l: '+', a: '+', c: 'op'},
+            {l: '0', a: '0', c: 'wide'}, {l: '.', a: '.', c: ''}, {l: '=', a: 'calc', c: 'action'}
+        ],
+        sci: [
+            {l: 'sin', a: 'sin(', c: 'op'}, {l: 'cos', a: 'cos(', c: 'op'}, {l: 'tan', a: 'tan(', c: 'op'}, {l: 'C', a: 'clear', c: 'action'},
+            {l: 'log', a: 'log10(', c: 'op'}, {l: 'exp', a: 'exp(', c: 'op'}, {l: 'sqrt', a: 'sqrt(', c: 'op'}, {l: '÷', a: '/', c: 'op'},
+            {l: '7', a: '7', c: ''}, {l: '8', a: '8', c: ''}, {l: '9', a: '9', c: ''}, {l: '×', a: '*', c: 'op'},
+            {l: '4', a: '4', c: ''}, {l: '5', a: '5', c: ''}, {l: '6', a: '6', c: ''}, {l: '-', a: '-', c: 'op'},
+            {l: '1', a: '1', c: ''}, {l: '2', a: '2', c: ''}, {l: '3', a: '3', c: ''}, {l: '+', a: '+', c: 'op'},
+            {l: '0', a: '0', c: 'wide'}, {l: 'π', a: 'PI', c: ''}, {l: '=', a: 'calc', c: 'action'}
+        ],
+        prog: [
+            {l: 'DEC', a: 'dec', c: 'op'}, {l: 'HEX', a: 'hex', c: 'op'}, {l: 'BIN', a: 'bin', c: 'op'}, {l: 'C', a: 'clear', c: 'action'},
+            {l: 'A', a: 'A', c: ''}, {l: 'B', a: 'B', c: ''}, {l: 'C', a: 'C', c: ''}, {l: 'D', a: 'D', c: ''},
+            {l: 'E', a: 'E', c: ''}, {l: 'F', a: 'F', c: ''}, {l: '1', a: '1', c: ''}, {l: '2', a: '2', c: ''},
+            {l: '3', a: '3', c: ''}, {l: '4', a: '4', c: ''}, {l: '5', a: '5', c: ''}, {l: '6', a: '6', c: ''},
+            {l: '7', a: '7', c: ''}, {l: '8', a: '8', c: ''}, {l: '9', a: '9', c: ''}, {l: '0', a: '0', c: 'wide'},
+            {l: '=', a: 'calc', c: 'action'}
+        ]
+    };
+
+    function init() {
+        switchMode('basic');
+        window.addEventListener('mousedown', spawnParticles);
+    }
+
+    function switchMode(mode) {
+        state.mode = mode;
+        state.expression = '';
+        state.history = '';
+        
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.innerText.toLowerCase().includes(mode));
+        });
+        document.getElementById('mode-indicator').innerText = mode.toUpperCase();
+
+        const mainGrid = document.getElementById('main-grid');
+        const convView = document.getElementById('conv-view');
+        const finView = document.getElementById('fin-view');
+
+        // Cinematic GSAP Transition
+        gsap.to("#app", { duration: 0.3, y: -10, opacity: 0.8, onComplete: () => {
+            mainGrid.style.display = 'none';
+            convView.style.display = 'none';
+            finView.style.display = 'none';
+
+            if (mode === 'basic' || mode === 'sci' || mode === 'prog') {
+                mainGrid.style.display = 'grid';
+                renderKeys(mode);
+            } else if (mode === 'conv') {
+                convView.style.display = 'flex';
+            } else if (mode === 'fin') {
+                finView.style.display = 'flex';
+            }
+
+            gsap.to("#app", { duration: 0.3, y: 0, opacity: 1 });
+            updateDisplay();
+        }});
+    }
+
+    function renderKeys(mode) {
+        const grid = document.getElementById('main-grid');
+        grid.innerHTML = '';
+        keys[mode].forEach(k => {
+            const btn = document.createElement('button');
+            btn.className = `key ${k.c}`;
+            btn.innerText = k.l;
+            btn.onclick = (e) => handleKey(k.a, e);
+            grid.appendChild(btn);
+        });
+    }
+
+    function handleKey(action, event) {
+        if (action === 'clear') {
+            state.expression = '';
+            state.history = '';
+        } else if (action === 'calc') {
+            try {
+                const result = math.evaluate(state.expression);
+                state.history = state.expression + ' =';
+                state.expression = result.toString();
+                
+                anime({
+                    targets: '#main-display',
+                    scale: [1, 1.1, 1],
+                    duration: 300,
+                    easing: 'easeOutElastic(1, .6)'
+                });
+            } catch (e) {
+                state.expression = 'Error';
+            }
+        } else if (state.mode === 'prog' && ['dec','hex','bin'].includes(action)) {
+            // Fast base conversion
+            if (!state.expression) return;
+            try {
+                const val = parseInt(state.expression, 10);
+                if (action === 'hex') state.expression = val.toString(16).toUpperCase();
+                if (action === 'bin') state.expression = val.toString(2);
+                if (action === 'dec') state.expression = parseInt(state.expression, 16).toString(10); // Simplified
+            } catch(e) { state.expression = 'Error'; }
+        } else {
+            state.expression += action;
+        }
+        updateDisplay();
+        if (event) spawnParticles(event);
+    }
+
+    function updateDisplay() {
+        document.getElementById('history').innerText = state.history;
+        document.getElementById('main-display').innerText = state.expression || '0';
+    }
+
+    function doConversion() {
+        const val = parseFloat(document.getElementById('conv-input').value);
+        const from = document.getElementById('conv-from').value;
+        const to = document.getElementById('conv-to').value;
+        if (isNaN(val)) return;
+
+        let result;
+        // Simplified Conv Logic
+        const map = { m: 1, km: 1000, kg: 1, lb: 0.453592 };
+        if (from === 'c' && to === 'f') result = (val * 9/5) + 32;
+        else if (from === 'f' && to === 'c') result = (val - 32) * 5/9;
+        else if (map[from] && map[to]) result = val * (map[from] / map[to]);
+        else result = "N/A";
+
+        state.expression = result.toString();
+        state.history = `${val}${from} ➔ ${to}`;
+        updateDisplay();
+        showCalc(); // Return to basics after conversion
+    }
+
+    function calcFinance() {
+        const p = parseFloat(document.getElementById('fin-principal').value);
+        const r = parseFloat(document.getElementById('fin-rate').value) / 100;
+        const t = parseFloat(document.getElementById('fin-time').value);
+        if (isNaN(p) || isNaN(r) || isNaN(t)) return;
+
+        const result = p * (1 + r * t);
+        state.expression = result.toFixed(2);
+        state.history = `Interest: ${p} @ ${r*100}% for ${t}y`;
+        updateDisplay();
         showCalc();
     }
 
-    function append(val) { 
-        if(!display) return;
-        display.value += val; 
-        createParticles(window.event); 
-    }
-    function clearDisplay() { if(display) display.value = ''; }
-    function backspace() { if(display) display.value = display.value.slice(0, -1); }
-    function calculate() {
-        if(!display) return;
-        try { 
-            // Basic sanitation
-            const sanitized = display.value.replace(/[^-()\d/*+.]/g, '');
-            display.value = eval(sanitized); 
-        } catch { 
-            display.value = "Error ❌"; 
-        }
-    }
-
-    function showCategories() {
-        document.getElementById('calc-view').style.display = 'none';
-        document.getElementById('game-view').style.display = 'none';
-        document.getElementById('category-menu').style.display = 'flex';
-        stopGame();
-    }
-
     function showCalc() {
-        document.getElementById('category-menu').style.display = 'none';
-        document.getElementById('game-view').style.display = 'none';
-        document.getElementById('calc-view').style.display = 'block';
-        stopGame();
+        switchMode('basic');
     }
 
-    let score = 0;
-    let currentAns = "";
-    let timerInterval;
-    let timeLimit = 10000;
-    let startTime;
-    let currentCategory = 'math';
-
-    const bioQuestions = [
-        { q: "¿Cuál es el hueso más largo del cuerpo humano?", a: "Fémur", o: ["Húmero", "Tibia", "Fémur", "Radio"] },
-        { q: "¿Cuántos huesos tiene un adulto humano aproximadamente?", a: "206", o: ["206", "300", "150", "212"] },
-        { q: "¿En qué parte del cuerpo se encuentra la rótula?", a: "Rodilla", o: ["Codo", "Tobillo", "Rodilla", "Muñeca"] },
-        { q: "¿Cómo se llama el hueso que protege el cerebro?", a: "Cráneo", o: ["Clavícula", "Esternón", "Cráneo", "Pelvis"] },
-        { q: "¿Cuál es el hueso más pequeño del cuerpo?", a: "Estribo", o: ["Yunque", "Estribo", "Martillo", "Falange"] },
-        { q: "¿Qué hueso es conocido como el hueso del cuello?", a: "Atlas", o: ["Axis", "Atlas", "Seno", "Vértebra C7"] },
-        { q: "¿La columna vertebral se compone de qué tipo de huesos?", a: "Vértebras", o: ["Tarsos", "Carpos", "Vértebras", "Costillas"] },
-        { q: "¿Cuántas costillas tiene normalmente un humano?", a: "24", o: ["12", "24", "30", "18"] }
-    ];
-
-    function startGame(cat) {
-        currentCategory = cat;
-        score = 0;
-        // Reset rewards
-        document.querySelectorAll('.reward-item').forEach(el => el.classList.remove('unlocked'));
-        
-        document.getElementById('category-menu').style.display = 'none';
-        document.getElementById('game-view').style.display = 'block';
-        document.getElementById('game-title').innerText = cat === 'math' ? 'Súper Matemáticas ⚡' : 'Bio-Mastery 🧬';
-        updateUI();
-        nextQuestion();
-    }
-
-    function updateUI() {
-        document.getElementById('score').innerText = score;
-        let diff = Math.floor(score / 3) + 1;
-        document.getElementById('difficulty').innerText = diff;
-        if(score >= 5) document.getElementById('rew-1').classList.add('unlocked');
-        if(score >= 15) document.getElementById('rew-2').classList.add('unlocked');
-        if(score >= 30) document.getElementById('rew-3').classList.add('unlocked');
-    }
-
-    function nextQuestion() {
-        clearInterval(timerInterval);
-        let diff = Math.floor(score / 3) + 1;
-        let qText = "";
-        let options = [];
-
-        if (currentCategory === 'math') {
-            let a, b, op;
-            if (diff === 1) { a = Math.floor(Math.random()*10)+1; b = Math.floor(Math.random()*10)+1; op = '+'; }
-            else if (diff === 2) { a = Math.floor(Math.random()*20)+5; b = Math.floor(Math.random()*20)+5; op = Math.random()>0.5?'+':'-'; }
-            else if (diff === 3) { 
-                const ops = ['+', '-', '*'];
-                op = ops[Math.floor(Math.random()*ops.length)];
-                a = Math.floor(Math.random()*15)+2; b = Math.floor(Math.random()*15)+2;
-            } else {
-                a = Math.floor(Math.random()*500)+100; b = Math.floor(Math.random()*500)+100;
-                op = ['+', '-', '*'][Math.floor(Math.random()*3)];
-            }
-            if (op === '-' && a < b && diff < 5) [a, b] = [b, a];
-            currentAns = eval(`${a}${op}${b}`).toString();
-            qText = `${a} ${op === '*' ? '×' : op} ${b}`;
-            
-            options = [currentAns];
-            while(options.length < 4) {
-                let fake = (parseInt(currentAns) + (Math.floor(Math.random()*10)-5)).toString();
-                if(!options.includes(fake)) options.push(fake);
-            }
-            options.sort(() => Math.random() - 0.5);
-        } else {
-            let qData = bioQuestions[Math.floor(Math.random()*bioQuestions.length)];
-            qText = qData.q;
-            currentAns = qData.a;
-            options = qData.o.slice().sort(() => Math.random() - 0.5);
-        }
-
-        document.getElementById('game-question').innerText = qText;
-        const grid = document.getElementById('options-grid');
-        grid.innerHTML = '';
-        options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = opt;
-            btn.onclick = (e) => checkAnswer(opt, e);
-            grid.appendChild(btn);
-        });
-
-        timeLimit = Math.max(2000, 10000 - (diff * 800));
-        startTimer();
-    }
-
-    function checkAnswer(val, e) {
-        if(val === currentAns) {
-            score++;
-            updateUI();
-            createParticles(e);
-            nextQuestion();
-        } else {
-            clearInterval(timerInterval);
-            alert(`¡ERROR! ❌\nLa respuesta correcta era: ${currentAns}`);
-            startGame(currentCategory);
-        }
-    }
-
-    function startTimer() {
-        const bar = document.getElementById('timer-bar');
-        startTime = Date.now();
-        timerInterval = setInterval(() => {
-            let elapsed = Date.now() - startTime;
-            let percentage = 100 - (elapsed / timeLimit * 100);
-            if (percentage <= 0) {
-                bar.style.width = '0%';
-                clearInterval(timerInterval);
-                alert(`¡TIEMPO AGOTADO! 💀\nRespuesta correcta: ${currentAns}`);
-                startGame(currentCategory);
-            } else {
-                bar.style.width = percentage + '%';
-                bar.style.background = percentage < 30 ? 'var(--danger)' : 'linear-gradient(90deg, var(--primary), var(--cta))';
-            }
-        }, 50);
-    }
-
-    function stopGame() { clearInterval(timerInterval); }
-
-    function createParticles(e) {
-        if (!e) return;
+    function spawnParticles(e) {
         const x = e.clientX || (e.touches && e.touches[0].clientX);
         const y = e.clientY || (e.touches && e.touches[0].clientY);
-        if (x === undefined) return;
-
-        for (let i = 0; i < 8; i++) {
+        
+        for (let i = 0; i < 6; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
             p.style.left = x + 'px';
             p.style.top = y + 'px';
-            p.style.setProperty('--tx', (Math.random() - 0.5) * 100 + 'px');
-            p.style.setProperty('--ty', (Math.random() - 0.5) * 100 + 'px');
             document.body.appendChild(p);
-            setTimeout(() => p.remove(), 2000);
+
+            anime({
+                targets: p,
+                translateX: () => (Math.random() - 0.5) * 100,
+                translateY: () => (Math.random() - 0.5) * 100,
+                opacity: [1, 0],
+                scale: [1, 0],
+                duration: 1000 + Math.random() * 1000,
+                easing: 'easeOutExpo',
+                complete: () => p.remove()
+            });
         }
     }
 
-    setInterval(() => {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        p.style.left = Math.random() * window.innerWidth + 'px';
-        p.style.top = Math.random() * window.innerHeight + 'px';
-        p.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
-        p.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
-        p.style.opacity = '0.3';
-        document.body.appendChild(p);
-        setTimeout(() => p.remove(), 2000);
-    }, 300);
+    window.onload = init;
 </script>
 </body>
 </html>
